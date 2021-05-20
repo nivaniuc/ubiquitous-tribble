@@ -9,8 +9,7 @@ TEAM PROFILE GENERATOR
 ## Introduction
 With this application, users can quickly and easily generate information for everyone on their team. This is great for employers and independent workers alike.
 ## Video
-![Example](https://nivaniuc.github.io/mtvs-pimp-my-folio/)
-
+[Example](https://webm.red/view/vXFq.webm)
 
 ## Usage 
 
