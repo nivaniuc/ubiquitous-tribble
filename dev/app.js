@@ -11,50 +11,145 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const outputDir = path.resolve(__dirname, "output")
+
 const writeFileAsync = util.promisify(fs.writeFile)
 
 
-const questions = [
+const employees = []
 
-    {
-        type: "input",
-        message: "What is Manger Name:",
-        name: "name",
-    },
+//This uses inquire to gather info and create objects
+const managerQuestions = () => {
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "Manager Name?",
+            name: "name"
+        },
 
-    {
-        type: "input",
-        message: "Manager Id",
-        name: "id"
-    },
+        {
+            type: "input",
+            message: "Manager ID:",
+            name: "id"
+        },
 
-    {
-        type: "input",
-        message: "Manager EmailAddress",
-        name: "email"
-    },
+        {
+            type: "input",
+            message: "Manager Email:",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "Manager Office Number:",
+            name: "officeNumber"
+        }
+    ]).then(managerOutput => {
+        employees.push(new Manager(managerOutput.name, managerOutput.id, managerOutput.email, managerOutput.officeNumber))
+        addEmployee();
+    })
+}
 
+const addEmployee = () => {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "What type of employee are you creating?",
+            name: "role",
+            choices: [
+                "Engineer",
+                "Intern",
+                "Exit"
+            ]
+        },
+    ]).then(addEmployee => {
 
-    {
-        type: "input",
-        message: "Manager office number",
-        name: "officeNumber"
-    },
+        console.log(addEmployee)
+        if (addEmployee.role === "Engineer") {
+            engineerQuestions()
+        }
+        else if (addEmployee.role === "Intern") {
+            internQuestions()
+        }
+        else if (addEmployee.role === "Exit") {
+            // After all the desired inputs for employees are made, call the render function
+            renderHtml()
+        }
+    })
+}
 
-];
+const engineerQuestions = () => {
+    return inquirer.prompt([
 
-class App {
+        {
+            type: "input",
+            message: "Engineer Name",
+            name: "name"
+        },
 
-    askQuestions() {
-        return inquirer.prompt(questions).then( val => {
-            let manager = new Manager(val.name, val.id, val.email, val.officeNumber)
-            console.log(`line 50 app.js ${val.name}, ${val.id}, ${val.email}, ${val.officeNumber}`)
-            console.log(`\n output path ${manager} \n`)
-            render(manager);
-        })
+        {
+            type: "input",
+            message: "Engineer ID",
+            name: "id"
+        },
+
+        {
+            type: "input",
+            message: "Engineer Email",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "Engineer's Github",
+            name: "gitHub"
+        },
+    ]).then(engineerAnswer => {
+        employees.push(new Engineer(engineerAnswer.name, engineerAnswer.id, engineerAnswer.email, engineerAnswer.gitHub))
+        addEmployee();
+    })
+}
+
+const internQuestions = () => {
+    return inquirer.prompt([
+
+        {
+            type: "input",
+            message: "Intern Name:",
+            name: "name"
+        },
+
+        {
+            type: "input",
+            message: "Intern ID:",
+            name: "id"
+        },
+
+        {
+            type: "input",
+            message: "Intern Email",
+            name: "email"
+        },
+        {
+            type: "input",
+            message: "Intern School",
+            name: "school"
+        },
+    ]).then(internAnswer => {
+        employees.push(new Intern(internAnswer.name, internAnswer.id, internAnswer.email, internAnswer.school))
+        addEmployee();
+    })
+}
+
+function renderHtml() {
+    const outputData = render(employees);
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR);
+        writeFileAsync(outputPath, outputData)
+    }
+    else {
+        fs.writeFileSync(outputPath, outputData);
     }
 }
 
-let test = new App()
-test.askQuestions()
+init()
+function init() {
+    askManagerQuestions();
+} 
