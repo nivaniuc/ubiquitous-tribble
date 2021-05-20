@@ -33,17 +33,6 @@ const renderManager =async manager => {
   template = replacePlaceholders(template, "email", manager.getEmail());
   template = replacePlaceholders(template, "id", manager.getId());
   template = replacePlaceholders(template, "officeNumber", manager.getOfficeNumber());
-  let teamHTML = template
-
-  if (!fs.existsSync(outputDir)) {
-    console.log(`Making Directory`)
-    fs.mkdirSync(outputDir);
-    await writeFileAsync("./output/team.html", teamHTML)
-  }else
-  {
-    await writeFileAsync("./output/team.html", teamHTML)
-
-  }
   return template;
 };
 

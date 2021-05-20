@@ -17,33 +17,58 @@ const writeFileAsync = util.promisify(fs.writeFile)
 
 const employees = []
 
+const askGeneralQuestions = [
+    {
+        type: "input",
+        message: "Team Name",
+        name: "name"
+    },
+
+    {
+        type: "input",
+        message: "Team ID",
+        name: "id"
+    },
+
+    {
+        type: "input",
+        message: "Team Email",
+        name: "email"
+    }
+]
+
+//Questions specific to manager
+const askManagerQuestion = {
+    type: "input",
+    message: "Team Office Number",
+    name: "officeNumber"
+}
+
+//Questions specific to engineer
+const askEngineerQuestions = 
+    {
+        type: "input",
+        message: "Engineer Github",
+        name: "gitHub"
+    }
+
+//Questions specific to intern
+const askInternQuestions = 
+    {
+        type: "input",
+        message: "Intern School",
+        name: "school"
+    }
+
+
 //This uses inquire to gather info and create objects
-const managerQuestions = () => {
-    return inquirer.prompt([
-        {
-            type: "input",
-            message: "Manager Name?",
-            name: "name"
-        },
-
-        {
-            type: "input",
-            message: "Manager ID:",
-            name: "id"
-        },
-
-        {
-            type: "input",
-            message: "Manager Email:",
-            name: "email"
-        },
-        {
-            type: "input",
-            message: "Manager Office Number:",
-            name: "officeNumber"
-        }
-    ]).then(managerOutput => {
-        employees.push(new Manager(managerOutput.name, managerOutput.id, managerOutput.email, managerOutput.officeNumber))
+const askManagerQuestions = () => {
+    return inquirer.prompt([...askGeneralQuestions, askManagerQuestion])
+    .then(managerOutput => {
+        
+        //Object Destructuring 
+        const {name,id,email,officeNumber}=managerOutput
+        employees.push(new Manager(name, id, email, officeNumber))
         addEmployee();
     })
 }
@@ -77,65 +102,25 @@ const addEmployee = () => {
 }
 
 const engineerQuestions = () => {
-    return inquirer.prompt([
-
-        {
-            type: "input",
-            message: "Engineer Name",
-            name: "name"
-        },
-
-        {
-            type: "input",
-            message: "Engineer ID",
-            name: "id"
-        },
-
-        {
-            type: "input",
-            message: "Engineer Email",
-            name: "email"
-        },
-        {
-            type: "input",
-            message: "Engineer's Github",
-            name: "gitHub"
-        },
-    ]).then(engineerAnswer => {
-        employees.push(new Engineer(engineerAnswer.name, engineerAnswer.id, engineerAnswer.email, engineerAnswer.gitHub))
+    return  inquirer.prompt([...askGeneralQuestions, askEngineerQuestions])
+    .then(engineerOutput=> {
+       
+        const {name,id,email,gitHub}=engineerOutput
+        employees.push(new Engineer(name,id,email,gitHub))
         addEmployee();
     })
 }
 
 const internQuestions = () => {
-    return inquirer.prompt([
 
-        {
-            type: "input",
-            message: "Intern Name:",
-            name: "name"
-        },
+    return inquirer.prompt([...askGeneralQuestions, askInternQuestions])
+        .then(internOutput => {
 
-        {
-            type: "input",
-            message: "Intern ID:",
-            name: "id"
-        },
 
-        {
-            type: "input",
-            message: "Intern Email",
-            name: "email"
-        },
-        {
-            type: "input",
-            message: "Intern School",
-            name: "school"
-        },
-    ]).then(internAnswer => {
-        employees.push(new Intern(internAnswer.name, internAnswer.id, internAnswer.email, internAnswer.school))
-        addEmployee();
-    })
+            const {name,id,email,school}=internOutput
+            employees.push(new Intern(name, id, email, school))
+            addEmployee();
+        })
 }
 
 function renderHtml() {
