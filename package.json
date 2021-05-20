@@ -1,0 +1,25 @@
+{
+  "name": "ubiquitous-tribble",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "bootstrap": "^5.0.1",
+    "inquirer": "^8.0.0",
+    "jest": "^26.6.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nivaniuc/ubiquitous-tribble.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nivaniuc/ubiquitous-tribble/issues"
+  },
+  "homepage": "https://github.com/nivaniuc/ubiquitous-tribble#readme"
+}
